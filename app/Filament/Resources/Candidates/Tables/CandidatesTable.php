@@ -11,6 +11,7 @@ use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use App\Filament\Exports\CandidateExporter;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Actions\ForceDeleteBulkAction;
 
 class CandidatesTable
@@ -56,7 +57,9 @@ class CandidatesTable
                 ExportAction::make()
                     ->label('Ekspor ke Excel')
                     ->exporter(CandidateExporter::class)
-                    ->formats(['xlsx']),
+                    ->formats([
+                        ExportFormat::Xlsx,
+                    ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
