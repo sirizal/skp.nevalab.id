@@ -140,4 +140,17 @@ class Candidate extends Model
     {
         return $query->where('user_id', $userId);
     }
+
+    public function getAgeAttribute()
+    {
+        if ($this->date_of_birth) {
+            return \Carbon\Carbon::parse($this->date_of_birth)->age;
+        }
+        return null;
+    }
+
+    public function getDOBAttribute()
+    {
+        return $this->date_of_birth ? $this->date_of_birth->format('d-M-Y') : null;
+    }
 }

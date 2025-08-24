@@ -3,10 +3,11 @@
 namespace App\Filament\Exports;
 
 use App\Models\Candidate;
-use Filament\Actions\Exports\ExportColumn;
-use Filament\Actions\Exports\Exporter;
-use Filament\Actions\Exports\Models\Export;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Number;
+use Filament\Actions\Exports\Exporter;
+use Filament\Actions\Exports\ExportColumn;
+use Filament\Actions\Exports\Models\Export;
 
 class CandidateExporter extends Exporter
 {
@@ -31,8 +32,17 @@ class CandidateExporter extends Exporter
             //ExportColumn::make('identification_file'),
             ExportColumn::make('place_of_birth')
                 ->label('Tempat Lahir'),
-            ExportColumn::make('date_of_birth')
-                ->label('Tanggal Lahir'),
+            /* ExportColumn::make('date_of_birth')
+                ->label('Tanggal Lahir')
+                ->formatStateUsing(fn ($state) => Carbon::hasFormat($state, 'Y-m-d H:i:s') ? Carbon::parse($state)->format('Y-m-d') : 'Invalid Date' ), */
+            ExportColumn::make('DOB')
+                ->label('Tanggal Lahir')
+                ,
+            ExportColumn::make('age')
+                ->label('Usia')
+                ->state(function(Candidate $record): float {
+                    return floatval($record->age);
+                }),
             //ExportColumn::make('status'),
             ExportColumn::make('position_applied')
                 ->label('Posisi Dilamar'),

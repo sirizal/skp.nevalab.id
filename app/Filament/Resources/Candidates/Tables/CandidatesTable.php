@@ -46,6 +46,10 @@ class CandidatesTable
                     ->label('Tanggal Lahir')
                     ->date()
                     ->sortable(),
+                TextColumn::make('age')
+                    ->label('Usia')
+                    ->getStateUsing(fn ($record) => $record->age)
+                    ->sortable(),
             ])
             ->filters([
                 TrashedFilter::make(),
