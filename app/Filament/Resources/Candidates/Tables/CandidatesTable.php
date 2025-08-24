@@ -55,7 +55,8 @@ class CandidatesTable
             ->headerActions([
                 ExportAction::make()
                     ->label('Ekspor ke Excel')
-                    ->exporter(CandidateExporter::class),
+                    ->exporter(CandidateExporter::class)
+                    ->formats(['xlsx']),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
