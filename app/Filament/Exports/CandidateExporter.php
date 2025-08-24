@@ -22,8 +22,9 @@ class CandidateExporter extends Exporter
                 ->label('Nama Lengkap'),
             ExportColumn::make('gender')
                 ->label('Jenis Kelamin'),
-            /* ExportColumn::make('email'),
-            ExportColumn::make('phone'), */
+            //ExportColumn::make('email'),
+            ExportColumn::make('phone')
+                ->label('Nomor Telepon'),
             ExportColumn::make('address')
                 ->label('Alamat'),
             // ExportColumn::make('resume_file'),
