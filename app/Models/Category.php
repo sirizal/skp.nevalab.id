@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use \Illuminate\Database\Eloquent\SoftDeletes;
-    protected $fillable = ['name', 'parent_id', 'category_type_id', 'itemcode', 'coa'];
+    protected $fillable = ['name', 'parent_id', 'category_type_id', 'itemcode', 'coa','sequence'];
 
     public function categoryType()
     {
