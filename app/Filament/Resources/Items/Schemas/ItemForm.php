@@ -15,28 +15,40 @@ class ItemForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                Textarea::make('description')
-                    ->columnSpanFull(),
-                TextInput::make('standard_price')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('packing_unit'),
-                Toggle::make('is_active')
-                    ->required(),
-                Toggle::make('is_stock_item')
-                    ->required(),
-                Select::make('uom_id')
-                    ->relationship('uom', 'name')
-                    ->searchable()
-                    ->required(),
                 Select::make('category_id')
                     ->relationship('category', 'name')
                     ->searchable()
+                    ->native(false)
+                    ->preload()
+                    ->label('Kategori')
+                    ->required(),
+                TextInput::make('name')
+                    ->label('Nama Barang')
+                    ->required(),
+                Textarea::make('description')
+                    ->label('Deskripsi')
+                    ->columnSpanFull(),
+                TextInput::make('standard_price')
+                    ->label('Harga Standar')
+                    ->required()
+                    ->numeric(),
+                TextInput::make('packing_unit')
+                    ->label('Kemasan'),
+                Select::make('uom_id')
+                    ->relationship('uom', 'name')
+                    ->searchable()
+                    ->native(false)
+                    ->preload()
                     ->required(),
                 FileUpload::make('image_path')
+                    ->label('Gambar')
                     ->image(),
+                Toggle::make('is_active')
+                    ->default(true)
+                    ->required(),
+                Toggle::make('is_stock_item')
+                    ->default(true)
+                    ->required(),
                 TextInput::make('barcode'),
             ]);
     }
