@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Items\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\Exports\Models\Export;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\IconColumn;
@@ -21,7 +22,7 @@ class ItemsTable
             ->columns([
                 ImageColumn::make('image_path')
                     ->label('Gambar')
-                    ->square(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('code')
                     ->label('Kode Barang')
                     ->sortable()
@@ -69,6 +70,14 @@ class ItemsTable
             ])
             ->recordActions([
                 EditAction::make(),
+            ])
+            ->headerActions([
+                ExportAction::make()
+                    ->label('Ekspor ke Excel')
+                    ->exporter(ItemExporter::class)
+                    ->formats([
+                        ExportFormat::Xlsx,
+                    ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
