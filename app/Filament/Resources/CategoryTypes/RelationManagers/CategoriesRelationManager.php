@@ -28,9 +28,6 @@ class CategoriesRelationManager extends RelationManager
             ->components([
                 TextInput::make('name')
                     ->required(),
-                TextInput::make('itemcode')
-                    ->nullable()
-                    ->label('Item Code'),
                 TextInput::make('coa')
                     ->nullable()
                     ->label('COA'),
@@ -55,9 +52,6 @@ class CategoriesRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('itemcode')
-                    ->label('Item Code')
                     ->searchable(),
                 TextColumn::make('coa')
                     ->label('COA')
