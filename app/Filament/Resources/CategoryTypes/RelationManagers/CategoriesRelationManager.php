@@ -40,6 +40,12 @@ class CategoriesRelationManager extends RelationManager
                     ->searchable()
                     ->preload()
                     ->nullable(),
+                TextInput::make('itemcode')
+                    ->nullable()
+                    ->numeric(),
+                TextInput::make('sequence')
+                    ->nullable()
+                    ->numeric(),
             ]);
     }
 
@@ -59,6 +65,11 @@ class CategoriesRelationManager extends RelationManager
                 TextColumn::make('parent.name')
                     ->label('Parent category')
                     ->searchable(),
+                TextColumn::make('itemcode')
+                    ->label('Item Code')
+                    ->searchable(),
+                TextColumn::make('sequence')
+                    ->sortable(),
             ])
             ->filters([
                 //
