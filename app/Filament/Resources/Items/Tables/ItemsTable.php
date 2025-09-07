@@ -44,6 +44,7 @@ class ItemsTable
                     ->sortable(),
                 TextColumn::make('category.name')
                     ->label('Kategori')
+                    ->wrap()
                     ->sortable(),
                 TextColumn::make('packing_unit')
                     ->label('Kemasan')
