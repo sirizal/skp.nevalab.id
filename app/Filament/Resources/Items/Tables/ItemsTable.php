@@ -25,7 +25,7 @@ class ItemsTable
             ->columns([
                 ImageColumn::make('image_path')
                     ->label('Gambar')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('code')
                     ->label('Kode Barang')
                     ->sortable()

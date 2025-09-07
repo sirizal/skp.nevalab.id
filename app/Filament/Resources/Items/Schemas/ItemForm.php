@@ -16,7 +16,10 @@ class ItemForm
         return $schema
             ->components([
                 Select::make('category_id')
-                    ->relationship('category', 'name')
+                    ->relationship(
+                        'category', 
+                        'name',
+                        fn ($query) => $query->where('category_type_id', 1))
                     ->searchable()
                     ->native(false)
                     ->preload()
