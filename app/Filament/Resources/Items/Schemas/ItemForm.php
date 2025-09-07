@@ -22,6 +22,11 @@ class ItemForm
                     ->preload()
                     ->label('Kategori')
                     ->required(),
+                TextInput::make('code')
+                    ->label('Kode Barang')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->visible(fn ($operation) => $operation === 'edit'), 
                 TextInput::make('name')
                     ->label('Nama Barang')
                     ->required(),
