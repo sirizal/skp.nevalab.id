@@ -18,21 +18,38 @@ class ProductionsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Kode Produksi')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('production_date')
+                    ->label('Tanggal Produksi')
+                    ->wrapHeader()
                     ->date()
                     ->sortable(),
-                TextColumn::make('total_budget_cost')
+                TextColumn::make('menu_portions_sum_portion_count')
+                    ->sum('menuPortions','portion_count')
+                    ->label('Total Porsi')
+                    ->wrapHeader()
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('total_estimated_cost')
+                TextColumn::make('menu_portions_sum_total_budget_cost')
+                    ->sum('menuPortions', 'total_budget_cost')
+                    ->label('Total Biaya Anggaran')
+                    ->wrapHeader()
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('total_actual_cost')
+                TextColumn::make('material_requests_sum_total_estimated_cost')
+                    ->label('Total Biaya Perkiraan')
+                    ->sum('materialRequests', 'total_estimated_cost')
+                    ->wrapHeader()
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('sr_no')
-                    ->searchable(),
+                TextColumn::make('material_requests_sum_total_actual_cost')
+                    ->label('Total Biaya Aktual')
+                    ->sum('materialRequests', 'total_actual_cost')
+                    ->wrapHeader()
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
@@ -45,7 +62,7 @@ class ProductionsTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->defaultSort('id', 'desc')
             ->filters([
                 TrashedFilter::make(),
             ])

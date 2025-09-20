@@ -39,10 +39,38 @@ class ProductionForm
                             ->state(fn (?Production $record) => $record ? 'Rp ' . number_format($record->menuPortions->sum('total_budget_cost'), 0, ',', '.') : 'Rp 0'),
                         TextEntry::make('total_estimated_cost')
                             ->label('Estimasi Biaya Produksi')
-                            ->state(fn (?Production $record) => $record ? 'Rp ' . number_format($record->materialRequests->sum('total_estimated_cost'), 0, ',', '.') : 'Rp 0'),
+                            ->state(fn (?Production $record) => $record ? 'Rp ' . number_format($record->materialRequests->sum('total_estimated_cost'), 0, ',', '.') : 'Rp 0')
+                            ->color(function (?Production $record) {
+                                if ($record) {
+                                    $estimated = $record->materialRequests->sum('total_estimated_cost');
+                                    $budget = $record->menuPortions->sum('total_budget_cost');
+                                    if ($estimated > $budget) {
+                                        return 'danger';
+                                    } elseif ($estimated == $budget) {
+                                        return 'warning';
+                                    } else {
+                                        return 'success';
+                                    }
+                                }
+                                return null;
+                            }),
                         TextEntry::make('total_actual_cost')
                             ->label('Realisasi Biaya Produksi')
-                            ->state(fn (?Production $record) => $record ? 'Rp ' . number_format($record->materialRequests->sum('total_actual_cost'), 0, ',', '.') : 'Rp 0'),
+                            ->state(fn (?Production $record) => $record ? 'Rp ' . number_format($record->materialRequests->sum('total_actual_cost'), 0, ',', '.') : 'Rp 0')
+                            ->color(function (?Production $record) {
+                                if ($record) {
+                                    $actual = $record->materialRequests->sum('total_actual_cost');
+                                    $budget = $record->menuPortions->sum('total_budget_cost');
+                                    if ($actual > $budget) {
+                                        return 'danger';
+                                    } elseif ($actual == $budget) {
+                                        return 'warning';
+                                    } else {
+                                        return 'success';
+                                    }
+                                }
+                                return null;
+                            }),
                     ]),
                 Group::make()
                     ->schema([
