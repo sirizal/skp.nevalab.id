@@ -26,4 +26,9 @@ class Production extends Model
     {
         return $this->hasMany(MenuPortion::class);
     }
+
+    public function materialRequests()
+    {
+        return $this->hasMany(MaterialRequest::class);
+    }
 }
