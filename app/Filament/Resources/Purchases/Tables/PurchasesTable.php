@@ -37,6 +37,12 @@ class PurchasesTable
                     ->label('Nilai PO')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('purchase_items_sum_receive_amount')
+                    ->sum('purchaseItems','receive_amount')
+                    ->label('Nilai Penerimaan')
+                    ->wrapHeader()
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

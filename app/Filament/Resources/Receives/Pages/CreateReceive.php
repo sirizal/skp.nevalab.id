@@ -48,13 +48,6 @@ class CreateReceive extends CreateRecord
     {
         $receive = Receive::find($this->record->id);
         $receiveItems = $receive->receiveItems;
-        $purchase = Purchase::find($this->record->purchase_id);
-        $totalPO = $purchase->purchaseItems->sum('purchase_qty');
-        $totalReceive = $purchase->purchaseItems->sum('receive_qty');
-        if($totalPO === $totalReceive) {
-            $purchase->full_received = 'Y';
-            $purchase->update();
-        }
         foreach ($receiveItems as $value) 
         {
             $stockMutation = StockMutation::where('item_id',$value->item_id)->first();
@@ -64,6 +57,7 @@ class CreateReceive extends CreateRecord
             $receiveItem->update();
             $poItem = PurchaseItem::where('id',$value->purchase_item_id)->first();
             $poItem->receive_qty+=$value->receive_qty;
+            $poItem->receive_amount+=($value->receive_qty*$value->receive_price);
             $poItem->update();
             if($smId > 0) 
             {
@@ -77,6 +71,14 @@ class CreateReceive extends CreateRecord
                 ]);                
                 $smCreate->setBalanceStock();
             }
+        }
+
+        $purchase = Purchase::find($this->record->purchase_id);
+        $totalPO = $purchase->purchaseItems->sum('purchase_qty');
+        $totalReceive = $purchase->purchaseItems->sum('receive_qty');
+        if($totalPO === $totalReceive) {
+            $purchase->full_received = 'Y';
+            $purchase->update();
         }
     }
 }
