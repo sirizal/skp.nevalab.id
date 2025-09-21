@@ -13,7 +13,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Filters\TrashedFilter;
-use Filament\Actions\Exports\Models\Export;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\Exports\Enums\ExportFormat;
 
