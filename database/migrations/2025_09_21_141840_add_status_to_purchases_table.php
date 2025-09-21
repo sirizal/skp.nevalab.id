@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('purchases', function (Blueprint $table) {
-            $table->char('full_received')->default('N');
-            $table->char('full_invoiced')->default('N');
+            $table->string('full_received')->default('N');
+            $table->string('full_invoiced')->default('N');
         });
     }
 

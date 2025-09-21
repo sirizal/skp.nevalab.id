@@ -52,6 +52,7 @@ class ReceiveForm
                                         $vendor = $get('vendor_id');
                                         if($vendor) {
                                             return Purchase::all()->where('vendor_id',$vendor)
+                                                                    ->where('full_received','N')
                                                                     ->pluck('code','id');
                                         }
                                         return Purchase::all()->pluck('code','id');
