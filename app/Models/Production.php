@@ -15,6 +15,7 @@ class Production extends Model
         'total_estimated_cost',
         'total_actual_cost',
         'sr_no',
+        'user_id'
     ];
 
     public function menuPlans()
