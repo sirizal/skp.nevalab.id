@@ -214,10 +214,7 @@ class ProductionForm
                 TableColumn::make('Qty Diminta')
                     ->width('150px')
                     ->wrapHeader(),
-                TableColumn::make('Qty Digunakan')
-                    ->width('150px')
-                    ->wrapHeader(),
-                TableColumn::make('Qty Dikembalikan')
+                TableColumn::make('Perkiraan Biaya')
                     ->width('150px')
                     ->wrapHeader(),
             ])
@@ -259,7 +256,7 @@ class ProductionForm
                     })
                     ->debounce(500)
                     ->required()
-                    ->default(0),
+                    ->default(0),/* 
                 TextInput::make('used_quantity')
                     ->label('Qty Digunakan')
                     ->numeric()
@@ -287,11 +284,12 @@ class ProductionForm
                         $set('total_actual_cost', $totalActualCost);
                     })
                     ->debounce(500)
-                    ->default(0),
-                Hidden::make('total_estimated_cost')
-                    ->default(0),
+                    ->default(0), */
+                TextInput::make('total_estimated_cost')
+                    ->readOnly()
+                    ->default(0),/* 
                 Hidden::make('total_actual_cost')
-                    ->default(0),
+                    ->default(0), */
             ])
             ->defaultItems(1)
             ->minItems(1)

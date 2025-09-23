@@ -21,7 +21,7 @@ class CreateProduction extends CreateRecord
         if ($record === null or $record === "") {
             $requestNo = $prefix . date('ym') . '-001';
         } else {
-            $expNum = explode('-', $record->code);
+            $expNum = explode('-', $record->sr_no);
             if (date('ym') === $expNum[2]) {
             $number = ($expNum[3] + 1);
             $requestNo = $prefix . date('ym') . '-' . str_pad($number, 3, 0, STR_PAD_LEFT);
