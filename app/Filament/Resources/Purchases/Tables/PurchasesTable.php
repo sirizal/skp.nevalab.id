@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -36,12 +37,18 @@ class PurchasesTable
                     ->sum('purchaseItems','purchase_amount')
                     ->label('Nilai PO')
                     ->numeric()
+                    ->summarize([
+                        Sum::make()
+                    ])
                     ->sortable(),
                 TextColumn::make('purchase_items_sum_receive_amount')
                     ->sum('purchaseItems','receive_amount')
                     ->label('Nilai Penerimaan')
                     ->wrapHeader()
                     ->numeric()
+                    ->summarize([
+                        Sum::make()
+                    ])
                     ->sortable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
