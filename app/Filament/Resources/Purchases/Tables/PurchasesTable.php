@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Purchases\Tables;
 
+use App\Models\Purchase;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -68,6 +70,11 @@ class PurchasesTable
             ])
             ->recordActions([
                 EditAction::make(),
+                Action::make('po')
+                    ->label('Print PO')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->url(fn (Purchase $record): string => route('po.pdf.download', ['record' => $record]))
+                    ->openUrlInNewTab()
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
