@@ -179,7 +179,7 @@ class ProductionForm
                     ->label('Jumlah Porsi')
                     ->numeric()
                     ->required()
-                    ->reactive()
+                    ->live(debounce:500)
                     ->afterStateUpdated(function (callable $set, $state, callable $get) {
                         $budgetCost = $get('budget_cost') ?? 0;
                         $totalBudgetCost = $budgetCost * $state;
@@ -241,20 +241,25 @@ class ProductionForm
                     ->options(\App\Models\Uom::all()->pluck('code', 'id'))
                     ->required(),
                 TextInput::make('standard_price')
-                        ->label('Harga Standar')
-                        ->numeric()
-                        ->required()
-                        ->default(0),
+                    ->label('Harga Standar')
+                    ->numeric()
+                    ->live(debounce:500)
+                    ->afterStateUpdated(function (callable $set, $state, callable $get) {
+                        $requestQty = $get('request_quantity') ?? 0;
+                        $totalEstimatedCost = $requestQty * $state;
+                        $set('total_estimated_cost', $totalEstimatedCost);
+                    })
+                    ->required()
+                    ->default(0),
                 TextInput::make('request_quantity')
                     ->label('Qty Diminta')
                     ->numeric()
-                    ->reactive()
+                    ->live(debounce:500)
                     ->afterStateUpdated(function (callable $set, $state, callable $get) {
                         $standardPrice = $get('standard_price') ?? 0;
                         $totalEstimatedCost = $standardPrice * $state;
                         $set('total_estimated_cost', $totalEstimatedCost);
                     })
-                    ->debounce(500)
                     ->required()
                     ->default(0),/* 
                 TextInput::make('used_quantity')
