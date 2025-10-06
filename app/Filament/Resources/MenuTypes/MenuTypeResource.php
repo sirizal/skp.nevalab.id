@@ -24,6 +24,12 @@ class MenuTypeResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $navigationLabel = 'Tipe Menu';
+
+    protected static ?string $pluralLabel = 'Tipe Menu';
+
+    protected static ?int $navigationSort = 7;
+
     public static function form(Schema $schema): Schema
     {
         return MenuTypeForm::configure($schema);

@@ -13,7 +13,8 @@ class ListProductions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Input Data Produksi'),
         ];
     }
 }

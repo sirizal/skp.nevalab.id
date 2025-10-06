@@ -24,6 +24,12 @@ class UomResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'code';
 
+    protected static ?string $navigationLabel = 'Master Satuan';
+
+    protected static ?string $pluralLabel = 'Master Satuan';
+
+    protected static ?int $navigationSort = 5;
+
     public static function form(Schema $schema): Schema
     {
         return UomForm::configure($schema);

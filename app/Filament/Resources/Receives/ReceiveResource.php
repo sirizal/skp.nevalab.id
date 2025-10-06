@@ -24,6 +24,12 @@ class ReceiveResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'code';
 
+    protected static ?string $navigationLabel = 'Penerimaan Barang';
+
+    protected static ?string $pluralLabel = 'Penerimaan Barang';
+
+    protected static ?int $navigationSort = 2;
+
     public static function form(Schema $schema): Schema
     {
         return ReceiveForm::configure($schema);

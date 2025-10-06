@@ -25,13 +25,17 @@ class ReceivesTable
                     ->label('Pemasok')
                     ->sortable(),
                 TextColumn::make('receive_date')
+                    ->label('Tgl Terima')
                     ->date()
                     ->sortable(),
                 TextColumn::make('document_no')
+                    ->label('No SJ')
                     ->searchable(),
                 TextColumn::make('document_date')
+                    ->label('Tgl SJ')
                     ->searchable(),
                 TextColumn::make('purchase.code')
+                    ->label('No PO')
                     ->searchable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()

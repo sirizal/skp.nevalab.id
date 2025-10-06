@@ -22,6 +22,12 @@ class ProductionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static ?string $navigationLabel = 'Produksi';
+
+    protected static ?string $pluralLabel = 'Produksi';
+
+    protected static ?int $navigationSort = 0;
+
     public static function form(Schema $schema): Schema
     {
         return ProductionForm::configure($schema);

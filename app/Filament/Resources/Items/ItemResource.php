@@ -24,6 +24,12 @@ class ItemResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'code';
 
+    protected static ?string $navigationLabel = 'Master Barang';
+
+    protected static ?string $pluralLabel = 'Master Barang';
+
+    protected static ?int $navigationSort = 6;
+
     public static function form(Schema $schema): Schema
     {
         return ItemForm::configure($schema);

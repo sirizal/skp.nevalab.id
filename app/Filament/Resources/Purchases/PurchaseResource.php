@@ -24,6 +24,12 @@ class PurchaseResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'code';
 
+    protected static ?string $navigationLabel = 'Pembelian Barang';
+
+    protected static ?string $pluralLabel = 'Pembelian Barang';
+
+    protected static ?int $navigationSort = 1;
+
     public static function form(Schema $schema): Schema
     {
         return PurchaseForm::configure($schema);

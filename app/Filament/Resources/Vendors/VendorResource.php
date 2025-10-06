@@ -22,6 +22,12 @@ class VendorResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static ?string $navigationLabel = 'Pemasok';
+
+    protected static ?string $pluralLabel = 'Pemasok';
+
+    protected static ?int $navigationSort = 8;
+
     public static function form(Schema $schema): Schema
     {
         return VendorForm::configure($schema);

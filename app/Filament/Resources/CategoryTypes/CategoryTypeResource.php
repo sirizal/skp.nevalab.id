@@ -25,6 +25,12 @@ class CategoryTypeResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $navigationLabel = 'Kategori';
+
+    protected static ?string $pluralLabel = 'Kategori';
+
+    protected static ?int $navigationSort = 4;
+
     public static function form(Schema $schema): Schema
     {
         return CategoryTypeForm::configure($schema);

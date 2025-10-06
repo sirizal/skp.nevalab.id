@@ -24,6 +24,12 @@ class RecipeResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $navigationLabel = 'Resep';
+
+    protected static ?string $pluralLabel = 'Resep';
+
+    protected static ?int $navigationSort = 8;
+
     public static function form(Schema $schema): Schema
     {
         return RecipeForm::configure($schema);

@@ -18,23 +18,26 @@ class CreateReceive extends CreateRecord
     {
         $data['user_id'] = auth()->id();
 
-        $record = Receive::latest('id')->first();
+        if(!isset($data['code'])) {
+            $record = Receive::latest('id')->first();
 
-        $prefix = "RR-SKP-";
+            $prefix = "GRN-SKP-";
 
-        if ($record === null or $record === "") {
-            $requestNo = $prefix . date('ym') . '-001';
-        } else {
-            $expNum = explode('-', $record->code);
-            if (date('ym') === $expNum[2]) {
-            $number = ($expNum[3] + 1);
-            $requestNo = $prefix . date('ym') . '-' . str_pad($number, 3, 0, STR_PAD_LEFT);
+            if ($record === null or $record === "") {
+                $requestNo = $prefix . date('ym') . '-001';
             } else {
-            $requestNo = $prefix . date('ym') . '-001';
+                $expNum = explode('-', $record->code);
+                if (date('ym') === $expNum[2]) {
+                $number = ($expNum[3] + 1);
+                $requestNo = $prefix . date('ym') . '-' . str_pad($number, 3, 0, STR_PAD_LEFT);
+                } else {
+                $requestNo = $prefix . date('ym') . '-001';
+                }
             }
+
+            $data['code'] = $requestNo;
         }
 
-        $data['code'] = $requestNo;
 
         return $data;
     }

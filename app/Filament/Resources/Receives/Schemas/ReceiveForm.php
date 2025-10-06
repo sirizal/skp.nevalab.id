@@ -26,6 +26,8 @@ class ReceiveForm
                     ->schema([
                         Section::make()
                             ->schema([
+                                TextInput::make('code')
+                                    ->label('No Penerimaan'),
                                 Select::make('vendor_id')
                                     ->label('Pemasok')
                                     ->relationship('vendor','name')
