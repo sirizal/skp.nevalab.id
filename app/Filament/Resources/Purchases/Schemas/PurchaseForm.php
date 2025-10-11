@@ -54,6 +54,7 @@ class PurchaseForm
                             Repeater::make('purchaseItems')
                                 ->label('Detail Pembelian')
                                 ->relationship('purchaseItems')
+                                ->compact()
                                 ->table([
                                     TableColumn::make('Kategori')
                                         ->width('150px'),
@@ -113,17 +114,22 @@ class PurchaseForm
                                             ->label('Harga')
                                             ->numeric()
                                             ->required()
-                                            ->default(0),
+                                            ->default(0)
+                                            ->live(debounce:500)
+                                            ->afterStateUpdated(function (callable $set, $state, callable $get) {
+                                                $purchaseQty = $get('purchase_qty') ?? 0;
+                                                $totalEstimatedCost = $purchaseQty * $state;
+                                                $set('purchase_amount', $totalEstimatedCost);
+                                            }),
                                     TextInput::make('purchase_qty')
                                         ->label('Qty Diminta')
                                         ->numeric()
-                                        ->reactive()
+                                        ->live(debounce:500)
                                         ->afterStateUpdated(function (callable $set, $state, callable $get) {
                                             $standardPrice = $get('purchase_price') ?? 0;
                                             $totalEstimatedCost = $standardPrice * $state;
                                             $set('purchase_amount', $totalEstimatedCost);
                                         })
-                                        ->debounce(500)
                                         ->required()
                                         ->default(0),
                                     TextInput::make('purchase_amount')

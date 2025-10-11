@@ -111,6 +111,7 @@ class ProductionForm
         return Repeater::make('menuPlans')
             ->relationship('menuPlans')
             ->label('Rencana Menu')
+            ->compact()
             ->table([
                 TableColumn::make('Kategori')
                     ->width('200px'),
@@ -146,6 +147,7 @@ class ProductionForm
         return Repeater::make('menuPortions')
             ->relationship('menuPortions')
             ->label('Rencana Porsi Menu')
+            ->compact()
             ->table([
                 TableColumn::make('Tipe Menu')
                     ->width('200px'),
@@ -204,6 +206,7 @@ class ProductionForm
         return Repeater::make('materialRequests')
             ->relationship('materialRequests')
             ->label('Permintaan Bahan')
+            ->compact()
             ->table([
                 TableColumn::make('Bahan')
                     ->width('200px'),
