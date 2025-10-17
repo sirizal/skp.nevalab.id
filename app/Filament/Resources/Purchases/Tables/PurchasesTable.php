@@ -3,16 +3,20 @@
 namespace App\Filament\Resources\Purchases\Tables;
 
 use App\Models\Purchase;
+use Filament\Tables\Table;
 use Filament\Actions\Action;
+use Illuminate\Support\Carbon;
+use Filament\Actions\EditAction;
+use Filament\Tables\Filters\Filter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
-use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\DatePicker;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TrashedFilter;
-use Filament\Tables\Table;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Tables\Columns\Summarizers\Sum;
 
 class PurchasesTable
 {
@@ -67,6 +71,37 @@ class PurchasesTable
             ])->defaultSort('id','desc')
             ->filters([
                 TrashedFilter::make(),
+                Filter::make('purchase_date')
+                    ->label('Tgl PO')
+                    ->schema([
+                        DatePicker::make('created_from')
+                            ->label('Tgl PO dari'),
+                        DatePicker::make('created_until')
+                            ->label('Tgl PO Sampai'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'] ?? null,
+                                fn (Builder $query, $date): Builder => $query->whereDate('purchase_date', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'] ?? null,
+                                fn (Builder $query, $date): Builder => $query->whereDate('purchase_date', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['created_from'] ?? null) {
+                            $indicators['created_from'] = 'Tgl PO dari ' . Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators['created_until'] = 'Tgl PO Sampai ' . Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+
+                        return $indicators;
+                    }),
+
             ])
             ->recordActions([
                 EditAction::make(),
