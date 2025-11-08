@@ -32,9 +32,11 @@ class PurchaseItemExporter extends Exporter
             ExportColumn::make('uom.code')
                 ->label('Satuan'),
             ExportColumn::make('purchase_price')
-                ->label('Harga'),
+                ->label('Harga Jual'),
             ExportColumn::make('purchase_amount')
-                ->label('Nilai PO')
+                ->label('Nilai PO'),
+            ExportColumn::make('item.buying_price')
+                ->label('Harga Beli')
         ];
     }
 
