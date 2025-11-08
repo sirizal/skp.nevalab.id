@@ -24,4 +24,9 @@ class PurchaseItem extends Model
     {
         return $this->belongsTo(Uom::class);
     }
+
+    public function purchase(): BelongsTo
+    {
+        return $this->belongsTo(Purchase::class);
+    }
 }
