@@ -21,6 +21,8 @@ class PurchaseItemExporter extends Exporter
                 ->label('Tipe PO'),
             ExportColumn::make('purchase.code')
                 ->label('No PO'),
+            ExportColumn::make('item.category.name')
+                ->label('Kategori Item'),
             ExportColumn::make('item.code')
                 ->label('Kode Item'),
             ExportColumn::make('item.name')
@@ -32,9 +34,7 @@ class PurchaseItemExporter extends Exporter
             ExportColumn::make('purchase_price')
                 ->label('Harga'),
             ExportColumn::make('purchase_amount')
-                ->label('Nilai PO'),
-            ExportColumn::make('item.category.name')
-                ->label('Kategori Item')
+                ->label('Nilai PO')
         ];
     }
 
