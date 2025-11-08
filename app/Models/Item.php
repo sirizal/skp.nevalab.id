@@ -20,6 +20,7 @@ class Item extends Model
         'category_id',
         'image_path',
         'barcode',
+        'buying_price'
     ];
 
     public function uom()

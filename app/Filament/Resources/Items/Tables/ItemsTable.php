@@ -38,6 +38,10 @@ class ItemsTable
                     ->label('Harga Standar')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('buying_price')
+                    ->label('Harga Beli')
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('uom.code')
                     ->label('Satuan')
                     ->sortable(),

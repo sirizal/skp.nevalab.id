@@ -40,6 +40,10 @@ class ItemForm
                     ->label('Harga Standar')
                     ->required()
                     ->numeric(),
+                TextInput::make('buying_price')
+                    ->label('Harga Beli')
+                    ->required()
+                    ->numeric(),
                 TextInput::make('packing_unit')
                     ->label('Kemasan'),
                 Select::make('uom_id')

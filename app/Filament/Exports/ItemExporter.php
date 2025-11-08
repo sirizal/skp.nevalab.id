@@ -22,6 +22,7 @@ class ItemExporter extends Exporter
             ExportColumn::make('description'),
             ExportColumn::make('packing_unit'),
             ExportColumn::make('standard_price'),
+            ExportColumn::make('buying_price'),
             ExportColumn::make('uom.code')
                 ->label('UOM'),
             ExportColumn::make('category.name')
