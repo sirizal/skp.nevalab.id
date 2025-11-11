@@ -56,8 +56,8 @@ class PurchaseForm
                                 ->relationship('purchaseItems')
                                 ->compact()
                                 ->table([
-                                    TableColumn::make('Kategori')
-                                        ->width('150px'),
+                                    /* TableColumn::make('Kategori')
+                                        ->width('150px'), */
                                     TableColumn::make('Item')
                                         ->width('200px'),
                                     TableColumn::make('Satuan')
@@ -70,7 +70,7 @@ class PurchaseForm
                                         ->width('150px'),
                                 ])
                                 ->schema([
-                                    Select::make('category_id')
+                                    /* Select::make('category_id')
                                         ->label('Kategori')
                                         ->searchable()
                                         ->preload()
@@ -81,17 +81,17 @@ class PurchaseForm
                                             }
                                             return Category::all()->pluck('name','id');
                                         })
-                                        ->dehydrated(false),
+                                        ->dehydrated(false), */
                                     Select::make('item_id')
                                         ->label('Item')
                                         ->searchable()
                                         ->preload()
-                                        ->options(function (callable $get) {
-                                            $categoryId = $get('category_id');
+                                        ->options(function () {
+                                            /* $categoryId = $get('category_id');
                                             if ($categoryId) {
                                                 return \App\Models\Item::where('category_id', $categoryId)->get()->pluck('name', 'id');
-                                            }
-                                            return \App\Models\Item::all()->pluck('name', 'id');
+                                            } */
+                                            return \App\Models\Item::where('is_active',true)->pluck('name', 'id');
                                         })
                                         ->reactive()
                                         ->afterStateUpdated(function (callable $set, $state) {
@@ -104,8 +104,8 @@ class PurchaseForm
                                                 $set('purchase_price', 0);
                                             }
                                         })
-                                        ->required()
-                                        ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
+                                        ->required(),
+                                        //->disableOptionsWhenSelectedInSiblingRepeaterItems(),
                                     Select::make('uom_id')
                                         ->label('Satuan')
                                         ->options(\App\Models\Uom::all()->pluck('code', 'id'))
@@ -115,7 +115,7 @@ class PurchaseForm
                                             ->numeric()
                                             ->required()
                                             ->default(0)
-                                            ->live(debounce:500)
+                                            ->live(onBlur: true)
                                             ->afterStateUpdated(function (callable $set, $state, callable $get) {
                                                 $purchaseQty = $get('purchase_qty') ?? 0;
                                                 $totalEstimatedCost = $purchaseQty * $state;
@@ -124,7 +124,7 @@ class PurchaseForm
                                     TextInput::make('purchase_qty')
                                         ->label('Qty Diminta')
                                         ->numeric()
-                                        ->live(debounce:500)
+                                        ->live(onBlur:true)
                                         ->afterStateUpdated(function (callable $set, $state, callable $get) {
                                             $standardPrice = $get('purchase_price') ?? 0;
                                             $totalEstimatedCost = $standardPrice * $state;
