@@ -2,19 +2,19 @@
 
 namespace App\Filament\Resources\Items\Tables;
 
-use Filament\Tables\Table;
+use App\Filament\Exports\ItemExporter;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ExportAction;
-use Filament\Actions\BulkActionGroup;
-use App\Filament\Exports\ItemExporter;
-use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\Exports\Enums\ExportFormat;
+use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
-use Filament\Actions\ForceDeleteBulkAction;
-use Filament\Actions\Exports\Enums\ExportFormat;
+use Filament\Tables\Table;
 
 class ItemsTable
 {
@@ -40,6 +40,10 @@ class ItemsTable
                     ->sortable(),
                 TextColumn::make('buying_price')
                     ->label('Harga Beli')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('last_purchase_price')
+                    ->label('Harga Beli Terakhir')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('uom.code')

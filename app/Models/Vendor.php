@@ -22,5 +22,7 @@ class Vendor extends Model
         'contact_person',
         'email',
         'contact_no',
+        'sj_prefix',
+        'inv_prefix',
     ];
 }

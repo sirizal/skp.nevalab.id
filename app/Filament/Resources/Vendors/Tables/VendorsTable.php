@@ -50,6 +50,12 @@ class VendorsTable
                 TextColumn::make('contact_no')
                     ->label('No Kontak')
                     ->searchable(),
+                TextColumn::make('sj_prefix')
+                    ->label('Prefix SJ')
+                    ->searchable(),
+                TextColumn::make('inv_prefix')
+                    ->label('Prefix Invoice')
+                    ->searchable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

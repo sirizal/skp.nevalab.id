@@ -4,8 +4,8 @@ namespace App\Filament\Resources\Items\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
@@ -17,7 +17,7 @@ class ItemForm
             ->components([
                 Select::make('category_id')
                     ->relationship(
-                        'category', 
+                        'category',
                         'name',
                         fn ($query) => $query->where('category_type_id', 1))
                     ->searchable()
@@ -29,7 +29,7 @@ class ItemForm
                     ->label('Kode Barang')
                     ->required()
                     ->unique(ignoreRecord: true)
-                    ->visible(fn ($operation) => $operation === 'edit'), 
+                    ->visible(fn ($operation) => $operation === 'edit'),
                 TextInput::make('name')
                     ->label('Nama Barang')
                     ->required(),
@@ -44,6 +44,10 @@ class ItemForm
                     ->label('Harga Beli')
                     ->required()
                     ->numeric(),
+                TextInput::make('last_purchase_price')
+                    ->label('Harga Beli Terakhir')
+                    ->numeric()
+                    ->default(0),
                 TextInput::make('packing_unit')
                     ->label('Kemasan'),
                 Select::make('uom_id')

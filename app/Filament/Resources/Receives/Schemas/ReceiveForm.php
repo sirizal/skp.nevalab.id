@@ -4,17 +4,16 @@ namespace App\Filament\Resources\Receives\Schemas;
 
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Group;
-use Symfony\Component\Clock\DatePoint;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Repeater\TableColumn;
-use Filament\Infolists\Components\TextEntry;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class ReceiveForm
 {
@@ -26,16 +25,14 @@ class ReceiveForm
                     ->schema([
                         Section::make()
                             ->schema([
-                                TextInput::make('code')
-                                    ->label('No Penerimaan'),
                                 Select::make('vendor_id')
                                     ->label('Pemasok')
-                                    ->relationship('vendor','name')
+                                    ->relationship('vendor', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->reactive()
-                                    ->afterStateUpdated(function(callable $set) {
-                                        $set('purchase_id',null);
+                                    ->afterStateUpdated(function (callable $set) {
+                                        $set('purchase_id', null);
                                         $set('receiveItems', []);
                                     })
                                     ->required(),
@@ -43,30 +40,36 @@ class ReceiveForm
                                     ->label('Tgl Penerimaan')
                                     ->required(),
                                 TextInput::make('document_no')
-                                    ->label('No Surat Jalan'),
+                                    ->label('No Surat Jalan')
+                                    ->visible(fn (string $operation): bool => $operation === 'edit')
+                                    ->dehydrated(false),
                                 DatePicker::make('document_date')
-                                    ->label('Tgl Surat Jalan'),
+                                    ->label('Tgl Surat Jalan')
+                                    ->visible(fn (string $operation): bool => $operation === 'edit')
+                                    ->dehydrated(false),
                                 Select::make('purchase_id')
                                     ->label('No PO')
                                     ->preload()
                                     ->searchable()
-                                    ->options(function(callable $get) {
+                                    ->visible(fn (string $operation): bool => $operation === 'create')
+                                    ->options(function (callable $get) {
                                         $vendor = $get('vendor_id');
-                                        if($vendor) {
-                                            return Purchase::all()->where('vendor_id',$vendor)
-                                                                    ->where('full_received','N')
-                                                                    ->pluck('code','id');
+                                        if ($vendor) {
+                                            return Purchase::all()->where('vendor_id', $vendor)
+                                                ->where('full_received', 'N')
+                                                ->pluck('code', 'id');
                                         }
-                                        return Purchase::all()->pluck('code','id');
+
+                                        return Purchase::all()->pluck('code', 'id');
                                     })
                                     ->reactive()
-                                    ->afterStateUpdated(function(callable $set,$get,$state) {
-                                        if(filled($state)) {
+                                    ->afterStateUpdated(function (callable $set, $get, $state) {
+                                        if (filled($state)) {
                                             $repeatItems = $get('receiveItems') ?? [];
 
-                                            $poItems = PurchaseItem::where('purchase_id',$state)
-                                                                    ->whereRaw('purchase_qty - receive_qty > 0')
-                                                                    ->get();
+                                            $poItems = PurchaseItem::where('purchase_id', $state)
+                                                ->whereRaw('purchase_qty - receive_qty > 0')
+                                                ->get();
 
                                             array_push(
                                                 $repeatItems,
@@ -74,23 +77,36 @@ class ReceiveForm
                                                     return [
                                                         'item_name' => $poItem->item->name ?? null,
                                                         'uom_name' => $poItem->uom->code ?? null,
-                                                        'purchase_qty' => $poItem->purchase_qty-$poItem->receive_qty ?? 0,
+                                                        'purchase_qty' => $poItem->purchase_qty - $poItem->receive_qty ?? 0,
                                                         'receive_qty' => 0,
                                                         'expired_date' => null,
-                                                        'note' => null,
+                                                        'receive_image' => null,
                                                         'item_id' => $poItem->item_id,
                                                         'uom_id' => $poItem->uom_id,
                                                         'receive_price' => $poItem->purchase_price ?? 0,
                                                         'purchase_id' => $poItem->purchase_id ?? 0,
-                                                        'purchase_item_id' => $poItem->id
+                                                        'purchase_item_id' => $poItem->id,
                                                     ];
                                                 })->toArray()
                                             );
 
-                                            $set('receiveItems',$repeatItems);
+                                            $set('receiveItems', $repeatItems);
                                         }
-                                    })
-                            ])->columns(5)
+                                    }),
+                                TextInput::make('purchase_code')
+                                    ->label('No PO')
+                                    ->visible(fn (string $operation): bool => $operation === 'edit')
+                                    ->dehydrated(false)
+                                    ->formatStateUsing(fn ($record) => $record?->purchase?->code),
+                                TextInput::make('invoice_no')
+                                    ->label('No Invoice')
+                                    ->visible(fn (string $operation): bool => $operation === 'edit')
+                                    ->dehydrated(false),
+                                DatePicker::make('invoice_date')
+                                    ->label('Tgl Invoice')
+                                    ->visible(fn (string $operation): bool => $operation === 'edit')
+                                    ->dehydrated(false),
+                            ])->columns(5),
                     ])->columnSpan(5),
                 Group::make()
                     ->schema([
@@ -99,6 +115,14 @@ class ReceiveForm
                                 Repeater::make('receiveItems')
                                     ->label('Detail Penerimaan')
                                     ->relationship('receiveItems')
+                                    ->mutateRelationshipDataBeforeCreateUsing(function (array $data): ?array {
+                                        if (($data['receive_qty'] ?? 0) <= 0) {
+                                            return null;
+                                        }
+
+                                        return $data;
+                                    })
+                                    ->visible(fn (string $operation): bool => $operation === 'create')
                                     ->table([
                                         TableColumn::make('Item')
                                             ->width('200px'),
@@ -110,8 +134,8 @@ class ReceiveForm
                                             ->width('100px'),
                                         TableColumn::make('Tgl Expire')
                                             ->width('125px'),
-                                        TableColumn::make('Keterangan')
-                                            ->width('200px')
+                                        TableColumn::make('Gambar')
+                                            ->width('200px'),
                                     ])
                                     ->schema([
                                         TextInput::make('item_name')
@@ -129,7 +153,13 @@ class ReceiveForm
                                             ->lte('purchase_qty')
                                             ->default(0),
                                         DatePicker::make('expired_date'),
-                                        TextInput::make('note'),
+                                        FileUpload::make('receive_image')
+                                            ->label('Gambar')
+                                            ->image()
+                                            ->maxFiles(1)
+                                            ->maxSize(1024)
+                                            ->disk('public')
+                                            ->directory('receive_images'),
                                         Hidden::make('item_id'),
                                         Hidden::make('uom_id'),
                                         Hidden::make('receive_price'),
@@ -139,9 +169,9 @@ class ReceiveForm
                                     ->defaultItems(0)
                                     ->minItems(0)
                                     ->addable(false)
-                                    ->deletable(false)
-                            ])
-                    ])->columnSpan(5)
+                                    ->deletable(false),
+                            ]),
+                    ])->columnSpan(5),
             ])
             ->columns(5);
     }

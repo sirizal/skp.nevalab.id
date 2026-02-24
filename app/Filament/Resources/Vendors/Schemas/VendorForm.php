@@ -27,6 +27,10 @@ class VendorForm
                     ->label('Alamat Email')
                     ->email(),
                 TextInput::make('contact_no')->label('No Kontak'),
+                TextInput::make('sj_prefix')
+                    ->label('Prefix SJ'),
+                TextInput::make('inv_prefix')
+                    ->label('Prefix Invoice'),
             ]);
     }
 }

@@ -13,4 +13,14 @@ class ReceiveItem extends Model
     {
         return $this->belongsTo(Purchase::class);
     }
+
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    public function uom(): BelongsTo
+    {
+        return $this->belongsTo(Uom::class);
+    }
 }

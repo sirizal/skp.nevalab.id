@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Item extends Model
 {
     use \Illuminate\Database\Eloquent\SoftDeletes;
+
     protected $fillable = [
         'code',
         'name',
@@ -20,16 +21,17 @@ class Item extends Model
         'category_id',
         'image_path',
         'barcode',
-        'buying_price'
+        'buying_price',
+        'last_purchase_price',
     ];
 
     public function uom()
     {
         return $this->belongsTo(Uom::class);
     }
-    
+
     public function category()
-    {        
+    {
         return $this->belongsTo(Category::class);
     }
 

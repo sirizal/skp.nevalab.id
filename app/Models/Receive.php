@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,8 +17,10 @@ class Receive extends Model
         'receive_date',
         'document_no',
         'document_date',
+        'invoice_no',
+        'invoice_date',
         'purchase_id',
-        'user_id'
+        'user_id',
     ];
 
     public function vendor()

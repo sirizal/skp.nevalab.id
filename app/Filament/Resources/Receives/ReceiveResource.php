@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Receives;
 use App\Filament\Resources\Receives\Pages\CreateReceive;
 use App\Filament\Resources\Receives\Pages\EditReceive;
 use App\Filament\Resources\Receives\Pages\ListReceives;
+use App\Filament\Resources\Receives\RelationManagers\ReceiveItemsRelationManager;
 use App\Filament\Resources\Receives\Schemas\ReceiveForm;
 use App\Filament\Resources\Receives\Tables\ReceivesTable;
 use App\Models\Receive;
@@ -43,7 +44,7 @@ class ReceiveResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ReceiveItemsRelationManager::class,
         ];
     }
 
