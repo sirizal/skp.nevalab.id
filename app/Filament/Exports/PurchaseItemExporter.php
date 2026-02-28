@@ -28,24 +28,28 @@ class PurchaseItemExporter extends Exporter
             ExportColumn::make('item.name')
                 ->label('Deskripsi'),
             ExportColumn::make('purchase_qty')
-                ->label('Qty PO'),
+                ->label('Qty PO')
+                ->formatStateUsing(fn ($state): ?string => $state !== null ? number_format($state, 2, '.', '') : null),
             ExportColumn::make('uom.code')
                 ->label('Satuan'),
             ExportColumn::make('purchase_price')
-                ->label('Harga Jual'),
+                ->label('Harga Jual')
+                ->formatStateUsing(fn ($state): ?string => $state !== null ? number_format($state, 2, '.', '') : null),
             ExportColumn::make('purchase_amount')
-                ->label('Nilai PO'),
+                ->label('Nilai PO')
+                ->formatStateUsing(fn ($state): ?string => $state !== null ? number_format($state, 2, '.', '') : null),
             ExportColumn::make('item.buying_price')
                 ->label('Harga Beli')
+                ->formatStateUsing(fn ($state): ?string => $state !== null ? number_format($state, 2, '.', '') : null),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Your purchase item export has completed and ' . Number::format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        $body = 'Your purchase item export has completed and '.Number::format($export->successful_rows).' '.str('row')->plural($export->successful_rows).' exported.';
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . Number::format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+            $body .= ' '.Number::format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to export.';
         }
 
         return $body;

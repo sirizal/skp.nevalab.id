@@ -3,15 +3,10 @@
 namespace App\Filament\Resources\PurchaseItems\Tables;
 
 use App\Filament\Exports\PurchaseItemExporter;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\ExportAction;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use pxlrbt\FilamentExcel\Actions\ExportBulkAction;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class PurchaseItemsTable
 {
@@ -48,23 +43,31 @@ class PurchaseItemsTable
                     ->label('Nilai PO')
                     ->sortable(),
                 TextColumn::make('item.category.name')
-                        ->label('Kategori Item')
-                        ->sortable()
-                        ->searchable(),
+                    ->label('Kategori Item')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
-                //
+                \Filament\Tables\Filters\Filter::make('purchase_date')
+                    ->schema([
+                        \Filament\Forms\Components\DatePicker::make('purchase_date_from'),
+                        \Filament\Forms\Components\DatePicker::make('purchase_date_until'),
+                    ])
+                    ->query(fn ($query, array $data) => $query
+                        ->when($data['purchase_date_from'], fn ($query) => $query->whereHas('purchase', fn ($query) => $query->where('purchase_date', '>=', $data['purchase_date_from'])))
+                        ->when($data['purchase_date_until'], fn ($query) => $query->whereHas('purchase', fn ($query) => $query->where('purchase_date', '<=', $data['purchase_date_until'])))
+                    ),
             ])
             ->recordActions([
-                //EditAction::make(),
+                // EditAction::make(),
             ])
             ->headerActions([
                 ExportAction::make()
                     ->label('Ekspor ke excel')
                     ->exporter(PurchaseItemExporter::class)
                     ->formats([
-                        ExportFormat::Xlsx
-                    ])
+                        ExportFormat::Xlsx,
+                    ]),
             ])
             ->toolbarActions([
                 /* BulkActionGroup::make([
