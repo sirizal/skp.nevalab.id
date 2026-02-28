@@ -98,7 +98,7 @@ class PurchaseForm
                                             $item = \App\Models\Item::find($state);
                                             if ($item) {
                                                 $set('uom_id', $item->uom_id);
-                                                $set('purchase_price', $item->standard_price);
+                                                $set('purchase_price', $item->last_purchase_price);
                                             } else {
                                                 $set('uom_id', null);
                                                 $set('purchase_price', 0);
