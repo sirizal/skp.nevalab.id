@@ -19,7 +19,7 @@ class CreateReceive extends CreateRecord
         $data['user_id'] = auth()->id();
 
         if (! isset($data['code'])) {
-            $record = Receive::latest('id')->first();
+            $record = Receive::withTrashed()->latest('id')->first();
 
             $prefix = 'GRN-SKP-';
 
@@ -46,7 +46,7 @@ class CreateReceive extends CreateRecord
                 $yymm = date('ym', strtotime($purchase->purchase_date));
                 $sjPrefix = $purchase->vendor?->sj_prefix ?? 'SJ';
 
-                $lastDocNo = Receive::where('document_no', 'like', "{$sjPrefix}-{$yymm}-%")
+                $lastDocNo = Receive::withTrashed()->where('document_no', 'like', "{$sjPrefix}-{$yymm}-%")
                     ->orderBy('id', 'desc')
                     ->first();
 

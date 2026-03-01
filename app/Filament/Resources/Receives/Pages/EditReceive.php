@@ -30,7 +30,7 @@ class EditReceive extends EditRecord
                     $yymm = date('ym', strtotime($receive->receive_date));
                     $invPrefix = $receive->purchase?->vendor?->inv_prefix ?? 'INV';
 
-                    $lastInvoice = Receive::where('invoice_no', 'like', "{$invPrefix}-{$yymm}-%")
+                    $lastInvoice = Receive::withTrashed()->where('invoice_no', 'like', "{$invPrefix}-{$yymm}-%")
                         ->orderBy('id', 'desc')
                         ->first();
 
