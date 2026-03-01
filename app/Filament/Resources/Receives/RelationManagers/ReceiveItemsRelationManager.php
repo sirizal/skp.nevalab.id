@@ -15,6 +15,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -87,7 +88,9 @@ class ReceiveItemsRelationManager extends RelationManager
                 ImageColumn::make('receive_image')
                     ->label('Gambar')
                     ->disk('public')
-                    ->visibility('public'),
+                    ->visibility('public')
+                    ->url(fn ($record): string => asset('storage/'.$record->receive_image))
+                    ->openUrlInNewTab(),
             ])
             ->filters([
                 //
@@ -98,20 +101,71 @@ class ReceiveItemsRelationManager extends RelationManager
             ->recordActions([
                 EditAction::make()
                     ->schema([
-                        TextInput::make('receive_price')
-                            ->numeric()
-                            ->required()
-                            ->label('Harga'),
+                        Grid::make(2)
+                            ->schema([
+                                Select::make('item_id')
+                                    ->relationship('item', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->label('Item')
+                                    ->columnSpan(2),
+                                Select::make('uom_id')
+                                    ->relationship('uom', 'code')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->label('Satuan'),
+                                TextInput::make('receive_qty')
+                                    ->numeric()
+                                    ->required()
+                                    ->label('Qty Terima')
+                                    ->rule(function (Model $record) {
+                                        return function ($attribute, $value, $fail) use ($record) {
+                                            $poItem = PurchaseItem::find($record->purchase_item_id);
+                                            if ($poItem && $value > $poItem->purchase_qty) {
+                                                $fail('Qty Terima tidak boleh melebihi Qty PO ('.$poItem->purchase_qty.')');
+                                            }
+                                        };
+                                    }),
+                                TextInput::make('receive_price')
+                                    ->numeric()
+                                    ->required()
+                                    ->label('Harga'),
+                                DatePicker::make('expired_date')
+                                    ->label('Tgl Expire'),
+                                FileUpload::make('receive_image')
+                                    ->label('Gambar')
+                                    ->image()
+                                    ->maxFiles(1)
+                                    ->maxSize(1024)
+                                    ->disk('public')
+                                    ->directory('receive_images'),
+                            ]),
                     ])
                     ->after(function (Model $record) {
                         $poItem = PurchaseItem::find($record->purchase_item_id);
                         if ($poItem) {
-                            $poItem->purchase_price = $record->receive_price;
-                            $poItem->receive_amount = $poItem->receive_qty * $record->receive_price;
+                            $oldReceiveQty = $poItem->receive_qty;
+                            $newReceiveQty = $record->receive_qty;
+                            $diffQty = $newReceiveQty - $oldReceiveQty;
+
+                            $poItem->receive_qty = $newReceiveQty;
+                            $poItem->receive_amount = $newReceiveQty * $record->receive_price;
                             $poItem->purchase_amount = $poItem->purchase_qty * $record->receive_price;
+                            $poItem->purchase_price = $record->receive_price;
                             $poItem->update();
 
                             $record->item?->update(['last_purchase_price' => $record->receive_price]);
+
+                            if ($diffQty != 0) {
+                                $stockMutation = StockMutation::where('item_id', $record->item_id)->first();
+                                if ($stockMutation) {
+                                    $stockMutation->receive_qty += $diffQty;
+                                    $stockMutation->update();
+                                    $stockMutation->setBalanceStock();
+                                }
+                            }
                         }
                     }),
                 DeleteAction::make()
