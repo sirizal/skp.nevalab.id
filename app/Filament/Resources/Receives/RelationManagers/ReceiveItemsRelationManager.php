@@ -89,7 +89,7 @@ class ReceiveItemsRelationManager extends RelationManager
                     ->label('Gambar')
                     ->disk('public')
                     ->visibility('public')
-                    ->url(fn ($record): string => asset('storage/'.$record->receive_image))
+                    ->url(fn ($record): string => secure_asset('storage/'.$record->receive_image))
                     ->openUrlInNewTab(),
             ])
             ->filters([
