@@ -54,6 +54,12 @@ class EditReceive extends EditRecord
                         ->success()
                         ->send();
                 }),
+            Action::make('printInvoice')
+                ->label('Print Invoice')
+                ->icon('heroicon-o-document-arrow-down')
+                ->visible(fn () => ! empty($this->record->invoice_no))
+                ->url(fn () => route('receive.invoice.download', ['record' => $this->record]))
+                ->openUrlInNewTab(),
             DeleteAction::make(),
             ForceDeleteAction::make(),
             RestoreAction::make(),

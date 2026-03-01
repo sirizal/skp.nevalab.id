@@ -67,7 +67,7 @@
 
             .table th,
             .table td {
-                padding: 0.75rem;
+                padding: 0.3rem;
                 vertical-align: top;
             }
 
@@ -136,14 +136,16 @@
     <body>
         {{-- Header --}}
         
-        <table class="table">
+        <table class="table" style="border-bottom: 2px solid #dee2e6;">
             <thead>
                 <tr>
-                    <th scope="col" class="text-center border-0"><img src="{{ $invoice->getLogo() }}" alt="logo" height="60"></th>
-                    <th scope="col" class="border-0"><h4>{{ $invoice->seller->name }}</h4></th>
-                </tr>
-                <tr>
-                    <th scope="col" colspan="2" class="text-center">{{ $invoice->seller->address }}</th>
+                    <th scope="col" class="text-center border-0" width="20%" style="vertical-align: middle;">
+                        <img src="{{ $invoice->getLogo() }}" alt="logo" width="100%" style="max-width: 100px; height: auto;">
+                    </th>
+                    <th scope="col" class="border-0" width="80%" style="vertical-align: middle;">
+                        <h4>{{ $invoice->seller->name }}</h4>
+                        <p>{{ $invoice->seller->address }}</p>
+                    </th>
                 </tr>
             </thead>
         </table>
@@ -165,9 +167,11 @@
                 <tr>
                     <td class="px-0">
                         @foreach($invoice->seller->custom_fields as $key => $value)
+                            @if($key !== 'Terbilang')
                             <p class="seller-custom-field">
                                 {{ ucfirst($key) }}: <strong> {{ $value }} </strong>
                             </p>
+                            @endif
                         @endforeach
                     </td>
                     <td class="border-0"></td>
@@ -186,13 +190,13 @@
         <table class="table table-items">
             <thead>
                 <tr>
-                    <th scope="col" class="border-0 pl-0">No</th>
-                    <th scope="col" class="text-center border-0">Kode Item</th>
-                    <th scope="col" class="text-center border-0">Nama Barang</th>
-                    <th scope="col" class="text-center border-0">Satuan</th>
-                    <th scope="col" class="text-center border-0">Qty</th>
-                    <th scope="col" class="text-center border-0">Harga</th>
-                    <th scope="col" class="text-center border-0">Jumlah</th>
+                    <th scope="col" class="border-0 pl-0" width="5%">No</th>
+                    <th scope="col" class="text-center border-0" width="10%">Kode Item</th>
+                    <th scope="col" class="text-center border-0" width="30%">Nama Barang</th>
+                    <th scope="col" class="text-center border-0" width="8%">Satuan</th>
+                    <th scope="col" class="text-center border-0" width="8%">Qty</th>
+                    <th scope="col" class="text-center border-0" width="15%">Harga</th>
+                    <th scope="col" class="text-center border-0" width="24%">Jumlah</th>
                 </tr>
             </thead>
             <tbody>
@@ -205,7 +209,7 @@
                     <td>{{ $item->title }}</td>
                     <td>{{ $item->description }}</td>
                     <td class="text-center">{{ $item->units }}</td>
-                    <td class="text-center">{{ $item->quantity }}</td>
+                    <td class="text-center">{{ number_format($item->quantity, 2, ',', '.') }}</td>
                     <td class="text-right">{{ $invoice->formatCurrency($item->price_per_unit) ?? 0 }}</td>
                     <td class="text-right pr-0">
                         {{ $invoice->formatCurrency($item->sub_total_price) }}
@@ -214,39 +218,40 @@
                 @endforeach
                 {{-- Summary --}}
                 <tr>
-                    <td colspan="5" class="border-0"></td>
-                    <td class="text-right pl-0">Total</td>
-                    <td class="text-right pr-0 total-amount">
+                    <td colspan="5" class="border-0" width="61%"></td>
+                    <td class="text-right pl-0" width="15%">Total</td>
+                    <td class="text-right pr-0 total-amount" width="24%">
                         {{ $invoice->formatCurrency($invoice->total_amount) }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left pl-0" colspan="7" style="border-top: none;">Terbilang:
+                        <span style="font-style: italic; color: black;">
+                            {{ $invoice->seller->custom_fields['Terbilang'] ?? '' }}
+                        </span>
                     </td>
                 </tr>
                     
             </tbody>
         </table>
 
-        @if($invoice->notes)
-            <p>
-                {{ trans('invoices::invoice.notes') }}: {!! $invoice->notes !!}
-            </p>
-        @endif
-
         <table class="table table-footer">
             <tbody>
                 <tr>
-                    <td class="" width="50%"><strong>Disiapkan Oleh</strong></td>
-                    <td class="" width="50%"><strong>Mengetahui</strong></td>
-                </tr>
-                <p></p>
-                <p></p>
-                <p></p>
-                <p></p>
-                <tr>
-                    <td class="" width="50%">______________________</td>
-                    <td class="" width="50%">_______________________</td>
-                </tr>
-                <tr>
-                    <td class="" width="50%">Aidah Sari</td>
-                    <td class="" width="50%">Amrul Hasibuan</td>
+                    <td class="pl-0" width="50%" valign="top">
+                        <strong>Hormat Kami</strong>
+                        <p></p>
+                        <p></p>
+                        <p></p>
+                        <p></p>
+                        <p></p>
+                        <p></p>
+                    </td>
+                    <td class="pr-0" width="50%" valign="top">
+                        @if($invoice->notes)
+                            {!! $invoice->notes !!}
+                        @endif
+                    </td>
                 </tr>
             </tbody>
         </table>

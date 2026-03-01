@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Vendors\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
@@ -31,6 +32,17 @@ class VendorForm
                     ->label('Prefix SJ'),
                 TextInput::make('inv_prefix')
                     ->label('Prefix Invoice'),
+                TextInput::make('bank_name')
+                    ->label('Nama Bank'),
+                TextInput::make('account_no')
+                    ->label('No Rekening'),
+                TextInput::make('account_holder_name')
+                    ->label('Nama Pemegang Rekening'),
+                FileUpload::make('logo')
+                    ->label('Logo')
+                    ->disk('vendor_invoices')
+                    ->image()
+                    ->nullable(),
             ]);
     }
 }

@@ -24,5 +24,18 @@ class Vendor extends Model
         'contact_no',
         'sj_prefix',
         'inv_prefix',
+        'bank_name',
+        'account_no',
+        'account_holder_name',
+        'logo',
     ];
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        if ($this->logo) {
+            return asset('vendor/invoices/'.$this->logo);
+        }
+
+        return null;
+    }
 }
