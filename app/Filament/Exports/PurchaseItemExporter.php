@@ -50,7 +50,7 @@ class PurchaseItemExporter extends Exporter
         $styleMerger = new StyleMerger;
 
         $numberStyle = (new Style)->setFormat('#,##0.00');
-        $dateStyle = (new Style)->setFormat('yyyy-mm-dd');
+        $dateStyle = (new Style)->setFormat('d/m/yyyy');
 
         $cells = [];
 
@@ -59,12 +59,14 @@ class PurchaseItemExporter extends Exporter
 
             $cells[] = match ($column) {
                 'purchase.purchase_date' => Cell::fromValue(
-                    $value instanceof Carbon ? $value : ($value ? Carbon::parse($value) : null),
-                    $styleMerger->merge($dateStyle, $style),
+                    $value instanceof Carbon ? $value : (
+                        is_string($value) && strlen($value) > 4 && str_contains($value, '-') ? Carbon::parse($value) : $value
+                    ),
+                    $style !== null ? $styleMerger->merge($dateStyle, $style) : $dateStyle,
                 ),
                 'purchase_qty', 'purchase_price', 'purchase_amount', 'item.buying_price' => Cell::fromValue(
-                    $value,
-                    $styleMerger->merge($numberStyle, $style),
+                    is_numeric($value) ? (float) $value : $value,
+                    $style !== null ? $styleMerger->merge($numberStyle, $style) : $numberStyle,
                 ),
                 default => Cell::fromValue($value),
             };
