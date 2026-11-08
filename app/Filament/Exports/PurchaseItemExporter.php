@@ -26,6 +26,10 @@ class PurchaseItemExporter extends Exporter
                 ->label('Tipe PO'),
             ExportColumn::make('purchase.code')
                 ->label('No PO'),
+            ExportColumn::make('receiveItems.receive.invoice_no')
+                ->label('No Invoice'),
+            ExportColumn::make('receiveItems.receive.invoice_date')
+                ->label('Tgl Invoice'),
             ExportColumn::make('item.category.name')
                 ->label('Kategori Item'),
             ExportColumn::make('item.code')
@@ -58,7 +62,7 @@ class PurchaseItemExporter extends Exporter
             $value = $values[$columnIndex];
 
             $cells[] = match ($column) {
-                'purchase.purchase_date' => Cell::fromValue(
+                'purchase.purchase_date', 'receiveItems.receive.invoice_date' => Cell::fromValue(
                     $value instanceof Carbon ? $value : (
                         is_string($value) && strlen($value) > 4 && str_contains($value, '-') ? Carbon::parse($value) : $value
                     ),

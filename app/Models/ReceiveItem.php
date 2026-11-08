@@ -9,6 +9,11 @@ class ReceiveItem extends Model
 {
     protected $guarded = [];
 
+    public function receive(): BelongsTo
+    {
+        return $this->belongsTo(Receive::class);
+    }
+
     public function purchase(): BelongsTo
     {
         return $this->belongsTo(Purchase::class);
