@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Support\Number;
 use OpenSpout\Common\Entity\Cell;
 use OpenSpout\Common\Entity\Row;
@@ -46,6 +47,16 @@ class PurchaseItemExporter extends Exporter
                 ->label('Nilai PO'),
             ExportColumn::make('item.buying_price')
                 ->label('Harga Beli'),
+        ];
+    }
+
+    public static function getOptionsFormComponents(): array
+    {
+        return [
+            DatePicker::make('purchase_date_from')
+                ->label('Tgl PO Dari'),
+            DatePicker::make('purchase_date_until')
+                ->label('Tgl PO Sampai'),
         ];
     }
 

@@ -34,6 +34,13 @@ class ReceivesTable
                 TextColumn::make('document_date')
                     ->label('Tgl SJ')
                     ->searchable(),
+                TextColumn::make('invoice_no')
+                    ->label('No Invoice')
+                    ->searchable(),
+                TextColumn::make('invoice_date')
+                    ->label('Tgl Invoice')
+                    ->date()
+                    ->sortable(),
                 TextColumn::make('purchase.code')
                     ->label('No PO')
                     ->searchable(),
@@ -49,7 +56,7 @@ class ReceivesTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])->defaultSort('id','desc')
+            ])->defaultSort('id', 'desc')
             ->filters([
                 TrashedFilter::make(),
             ])

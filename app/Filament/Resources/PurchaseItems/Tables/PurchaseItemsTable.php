@@ -7,6 +7,7 @@ use Filament\Actions\ExportAction;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class PurchaseItemsTable
 {
@@ -67,7 +68,11 @@ class PurchaseItemsTable
                     ->exporter(PurchaseItemExporter::class)
                     ->formats([
                         ExportFormat::Xlsx,
-                    ]),
+                    ])
+                    ->modifyQueryUsing(fn (Builder $query, array $options): Builder => $query
+                        ->when($options['purchase_date_from'] ?? null, fn (Builder $query, $date): Builder => $query->whereHas('purchase', fn (Builder $query): Builder => $query->whereDate('purchase_date', '>=', $date)))
+                        ->when($options['purchase_date_until'] ?? null, fn (Builder $query, $date): Builder => $query->whereHas('purchase', fn (Builder $query): Builder => $query->whereDate('purchase_date', '<=', $date)))
+                    ),
             ])
             ->toolbarActions([
                 /* BulkActionGroup::make([
