@@ -2,16 +2,15 @@
 
 namespace App\Filament\Resources\Purchases\Schemas;
 
-use App\Models\Item;
 use App\Models\Category;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Group;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Repeater\TableColumn;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class PurchaseForm
 {
@@ -40,37 +39,37 @@ class PurchaseForm
                                     ->label('Tipe PO')
                                     ->options([
                                         'Bahan Baku' => 'Bahan Baku',
-                                        'Operasional' => 'Operasional'
+                                        'Operasional' => 'Operasional',
                                     ])
                                     ->reactive()
-                                    ->required()
+                                    ->required(),
                             ])
                             ->columns(4),
                     ])->columnSpan(4),
                 Group::make()
                     ->schema([
                         Section::make()
-                        ->schema([
-                            Repeater::make('purchaseItems')
-                                ->label('Detail Pembelian')
-                                ->relationship('purchaseItems')
-                                ->compact()
-                                ->table([
-                                    /* TableColumn::make('Kategori')
+                            ->schema([
+                                Repeater::make('purchaseItems')
+                                    ->label('Detail Pembelian')
+                                    ->relationship('purchaseItems')
+                                    ->compact()
+                                    ->table([
+                                        /* TableColumn::make('Kategori')
                                         ->width('150px'), */
-                                    TableColumn::make('Item')
-                                        ->width('200px'),
-                                    TableColumn::make('Satuan')
-                                        ->width('100px'),
-                                    TableColumn::make('Harga')
-                                        ->width('100px'),
-                                    TableColumn::make('Qty')
-                                        ->width('100px'),
-                                    TableColumn::make('Total')
-                                        ->width('150px'),
-                                ])
-                                ->schema([
-                                    /* Select::make('category_id')
+                                        TableColumn::make('Item')
+                                            ->width('200px'),
+                                        TableColumn::make('Satuan')
+                                            ->width('100px'),
+                                        TableColumn::make('Harga')
+                                            ->width('100px'),
+                                        TableColumn::make('Qty')
+                                            ->width('100px'),
+                                        TableColumn::make('Total')
+                                            ->width('150px'),
+                                    ])
+                                    ->schema([
+                                        /* Select::make('category_id')
                                         ->label('Kategori')
                                         ->searchable()
                                         ->preload()
@@ -82,35 +81,40 @@ class PurchaseForm
                                             return Category::all()->pluck('name','id');
                                         })
                                         ->dehydrated(false), */
-                                    Select::make('item_id')
-                                        ->label('Item')
-                                        ->searchable()
-                                        ->preload()
-                                        ->options(function () {
-                                            /* $categoryId = $get('category_id');
+                                        Select::make('item_id')
+                                            ->label('Item')
+                                            ->searchable()
+                                            ->preload()
+                                            ->options(function () {
+                                                /* $categoryId = $get('category_id');
                                             if ($categoryId) {
                                                 return \App\Models\Item::where('category_id', $categoryId)->get()->pluck('name', 'id');
                                             } */
-                                            return \App\Models\Item::where('is_active',true)->pluck('name', 'id');
-                                        })
-                                        ->reactive()
-                                        ->afterStateUpdated(function (callable $set, $state) {
-                                            $item = \App\Models\Item::find($state);
-                                            if ($item) {
-                                                $set('uom_id', $item->uom_id);
-                                                $set('purchase_price', $item->last_purchase_price);
-                                            } else {
-                                                $set('uom_id', null);
-                                                $set('purchase_price', 0);
-                                            }
-                                        })
-                                        ->required(),
-                                        //->disableOptionsWhenSelectedInSiblingRepeaterItems(),
-                                    Select::make('uom_id')
-                                        ->label('Satuan')
-                                        ->options(\App\Models\Uom::all()->pluck('code', 'id'))
-                                        ->required(),
-                                    TextInput::make('purchase_price')
+                                                return \App\Models\Item::where('is_active', true)->pluck('name', 'id');
+                                            })
+                                            ->reactive()
+                                            ->afterStateUpdated(function (callable $set, $state, callable $get) {
+                                                $item = \App\Models\Item::find($state);
+
+                                                $purchasePrice = $item?->last_purchase_price ?? 0;
+                                                $purchaseQty = $get('purchase_qty') ?? 0;
+
+                                                if ($item) {
+                                                    $set('uom_id', $item->uom_id);
+                                                } else {
+                                                    $set('uom_id', null);
+                                                }
+
+                                                $set('purchase_price', $purchasePrice);
+                                                $set('purchase_amount', $purchasePrice * $purchaseQty);
+                                            })
+                                            ->required(),
+                                        // ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
+                                        Select::make('uom_id')
+                                            ->label('Satuan')
+                                            ->options(\App\Models\Uom::all()->pluck('code', 'id'))
+                                            ->required(),
+                                        TextInput::make('purchase_price')
                                             ->label('Harga')
                                             ->numeric()
                                             ->required()
@@ -121,26 +125,26 @@ class PurchaseForm
                                                 $totalEstimatedCost = $purchaseQty * $state;
                                                 $set('purchase_amount', $totalEstimatedCost);
                                             }),
-                                    TextInput::make('purchase_qty')
-                                        ->label('Qty Diminta')
-                                        ->numeric()
-                                        ->live(onBlur:true)
-                                        ->afterStateUpdated(function (callable $set, $state, callable $get) {
-                                            $standardPrice = $get('purchase_price') ?? 0;
-                                            $totalEstimatedCost = $standardPrice * $state;
-                                            $set('purchase_amount', $totalEstimatedCost);
-                                        })
-                                        ->required()
-                                        ->default(0),
-                                    TextInput::make('purchase_amount')
-                                        ->label('Total')
-                                        ->numeric()
-                                        ->required()
-                                        ->default(0)
-                                        ->readOnly(),
-                                ])
-                                ->defaultItems(1)
-                        ])
+                                        TextInput::make('purchase_qty')
+                                            ->label('Qty Diminta')
+                                            ->numeric()
+                                            ->live(onBlur: true)
+                                            ->afterStateUpdated(function (callable $set, $state, callable $get) {
+                                                $standardPrice = $get('purchase_price') ?? 0;
+                                                $totalEstimatedCost = $standardPrice * $state;
+                                                $set('purchase_amount', $totalEstimatedCost);
+                                            })
+                                            ->required()
+                                            ->default(0),
+                                        TextInput::make('purchase_amount')
+                                            ->label('Total')
+                                            ->numeric()
+                                            ->required()
+                                            ->default(0)
+                                            ->readOnly(),
+                                    ])
+                                    ->defaultItems(1),
+                            ]),
                     ])
                     ->columnSpan(4),
             ])
