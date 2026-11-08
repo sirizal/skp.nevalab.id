@@ -27,6 +27,8 @@ class PurchaseItemExporter extends Exporter
                 ->label('Tipe PO'),
             ExportColumn::make('purchase.code')
                 ->label('No PO'),
+            ExportColumn::make('purchase.vendor.name')
+                ->label('Pemasok'),
             ExportColumn::make('receiveItems.receive.invoice_no')
                 ->label('No Invoice'),
             ExportColumn::make('receiveItems.receive.invoice_date')

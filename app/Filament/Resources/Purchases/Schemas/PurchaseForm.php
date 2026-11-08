@@ -38,7 +38,9 @@ class PurchaseForm
                                 Select::make('po_type')
                                     ->label('Tipe PO')
                                     ->options([
-                                        'Bahan Baku' => 'Bahan Baku',
+                                        'Bahan Baku Dry' => 'Bahan Baku Dry',
+                                        'Bahan Baku Sayur Buah' => 'Bahan Baku Sayur Buah',
+                                        'Bahan Baku Frozen' => 'Bahan Baku Frozen',
                                         'Operasional' => 'Operasional',
                                     ])
                                     ->reactive()
